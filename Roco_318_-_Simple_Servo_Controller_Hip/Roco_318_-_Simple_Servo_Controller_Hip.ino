@@ -127,7 +127,7 @@ void loop() {
 
     // Set initial position for all the motors 
     UpdateServo(backLeftAnkle, 90); 
-    UpdateServo(frontLeftAnkle, 90); 
+    UpdateServo(frontLeftAnkle, 70); 
     UpdateServo(backRightAnkle, 90); 
     UpdateServo(frontRightAnkle, 90); 
     UpdateServo(backLeftKnee, 90);
@@ -138,11 +138,12 @@ void loop() {
     UpdateServo(frontRightHip, 80); 
     UpdateServo(backLeftHip, 70); 
     UpdateServo(backRightHip, 100); 
-    delay(1000);
+    delay(500);
 
     while(true)
     {
 
+    resetHips();
     touchFloorRight(backRightKnee, backRightAnkle);
     touchFloorLeft(backLeftKnee, backLeftAnkle);
     delay(200);
@@ -159,45 +160,7 @@ void loop() {
     stand(frontRightKnee, frontRightAnkle);
     delay(200);
     
-    
-    
     }
-//    //Step back left
-//    while(1)
-//    {
-//        
-//        touchFloorLeft(backLeftKnee, backLeftAnkle);
-//        nextStepLeft(frontLeftKnee, frontLeftAnkle);
-//        touching2Right(backRightKnee, backRightAnkle);
-//        UpdateServo(backRightHip, 90);
-//        touching1Right(frontRightKnee, frontRightAnkle);
-//        UpdateServo(frontRightHip, 70);
-//        delay(500);
-//
-//        touching1Left(backLeftKnee, backLeftAnkle);
-//        UpdateServo(backLeftHip, 60);
-//        touchFloorLeft(frontLeftKnee, frontLeftAnkle);
-//        nextStepRight(backRightKnee, backRightAnkle);
-//        touching2Right(frontRightKnee, frontRightAnkle);
-//        UpdateServo(frontRightHip, 90);
-//        delay(500);
-//
-//        touching2Left(backLeftKnee, backLeftAnkle);
-//        UpdateServo(backLeftHip, 70);
-//        touching1Left(frontLeftKnee, frontLeftAnkle);
-//        UpdateServo(frontLeftHip, 80);
-//        touchFloorRight(backRightKnee, backRightAnkle);
-//        nextStepRight(frontRightKnee, frontRightAnkle);
-//        delay(500);
-//
-//        nextStepLeft(backLeftKnee, backLeftAnkle);
-//        touching2Left(frontLeftKnee, frontLeftAnkle);
-//        UpdateServo(frontLeftHip, 100);
-//        touching1Right(backRightKnee, backRightAnkle);
-//        UpdateServo(backRightHip, 80);
-//        touchFloorRight(frontRightKnee, frontRightAnkle);
-//        delay(500);
-//    }
 
 
 }
@@ -272,8 +235,10 @@ void stand(int knee, int ankle)
   UpdateServo(knee, 90);
   UpdateServo(ankle, 90);
 }
-void startPosition(void)
+void resetHips(void)
 {
-
-  
+  UpdateServo(frontLeftHip, 100); 
+  UpdateServo(frontRightHip, 80); 
+  UpdateServo(backLeftHip, 70); 
+  UpdateServo(backRightHip, 100); 
 }
