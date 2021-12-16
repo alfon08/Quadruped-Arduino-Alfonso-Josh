@@ -80,24 +80,6 @@ int frontRightHip = 3;
 int frontRightKnee = 2;
 int frontRightAnkle = 1;
 
-//Different angles
-
-int angle1 = 90;
-int angle2 = 90;
-int angle3 = 90;
-
-int angle4 = 90;
-int angle5 = 90;
-int angle6 = 90;
-
-int angle7 = 90;
-int angle8 = 90;
-int angle9 = 90;
-
-int angle10 = 90;
-int angle11 = 90;
-int angle12 = 90;
-
 //----------------------------------------------------------------------------//
 void setup() {
   Serial.begin(115200); //Nice faster speed
@@ -127,7 +109,7 @@ void loop() {
 
     // Set initial position for all the motors 
     UpdateServo(backLeftAnkle, 90); 
-    UpdateServo(frontLeftAnkle, 70); 
+    UpdateServo(frontLeftAnkle, 90); 
     UpdateServo(backRightAnkle, 90); 
     UpdateServo(frontRightAnkle, 90); 
     UpdateServo(backLeftKnee, 90);
@@ -138,28 +120,43 @@ void loop() {
     UpdateServo(frontRightHip, 80); 
     UpdateServo(backLeftHip, 70); 
     UpdateServo(backRightHip, 100); 
-    delay(500);
-
-    while(true)
-    {
-
-    resetHips();
-    touchFloorRight(backRightKnee, backRightAnkle);
-    touchFloorLeft(backLeftKnee, backLeftAnkle);
-    delay(200);
+    delay(2000);
     
-    touchFloorLeft(frontLeftKnee, frontLeftAnkle);
-    touchFloorRight(frontRightKnee, frontRightAnkle);
-    delay(200);
-    
-    stand(backLeftKnee, backLeftAnkle);
-    stand(backRightKnee, backRightAnkle);
-    delay(200);
+   
+    while(1)
+    { 
+        //Reset hips in case they have moved 
+        resetHips();
 
-    stand(frontLeftKnee, frontLeftAnkle);
-    stand(frontRightKnee, frontRightAnkle);
-    delay(200);
-    
+        //Position 1
+        touchFloorLeft(backLeftKnee, backLeftAnkle);
+        nextStepLeft(frontLeftKnee, frontLeftAnkle);
+        touching2Right(backRightKnee, backRightAnkle);
+        touching1Right(frontRightKnee, frontRightAnkle);
+        delay(200);
+
+        //Position 2
+        touchFloorLeft(frontLeftKnee, frontLeftAnkle);
+        touching1Left(backLeftKnee, backLeftAnkle);
+        touching2Right(frontRightKnee, frontRightAnkle);
+        delay(200);
+        nextStepRight(backRightKnee, backRightAnkle); //The ankle need to raise quick so the foot is not touching the floor when it prepares the next step
+        delay(50);
+
+        //Position 3
+        touchFloorRight(backRightKnee, backRightAnkle);
+        touching2Left(backLeftKnee, backLeftAnkle);
+        touching1Left(frontLeftKnee, frontLeftAnkle);
+        nextStepRight(frontRightKnee, frontRightAnkle);
+        delay(200);
+
+        //Position 4
+        touchFloorRight(frontRightKnee, frontRightAnkle);
+        touching2Left(frontLeftKnee, frontLeftAnkle);
+        touching1Right(backRightKnee, backRightAnkle);
+        delay(200);
+        nextStepLeft(backLeftKnee, backLeftAnkle); //The ankle need to raise quick so the foot is not touching the floor when it prepares the next step
+        delay(50);
     }
 
 
@@ -186,25 +183,31 @@ void UpdateServo (int Id, int Angle) {
   PCA9685.setPWM(Id, 0, pulselength); //Send the angle to the appropiate servo
 
 }
+//In this motion pattern the legs have 4 positions and each leg will have different positions with the others
+//Positions: 1.moment when touches the floor 2.touching the floor 3.still touchinig the floor but in a more advanced position 4.Preparing the next step
+//We created one function for each position
+//We needed different angle values for right and left legs
 void touchFloorLeft(int knee, int ankle)
 {
+  
   UpdateServo(knee, 35);
   UpdateServo(ankle, 50);
 }
+
 void touching1Left(int knee, int ankle)
 {
-  UpdateServo(knee, 80);
+  UpdateServo(knee, 70);
   UpdateServo(ankle, 90);
 }
 void touching2Left(int knee, int ankle)
 {
-  UpdateServo(knee, 110);
+  UpdateServo(knee, 100);
   UpdateServo(ankle, 70);
 }
 void nextStepLeft(int knee, int ankle)
 {
   UpdateServo(ankle, 125);
-  delay(50);
+  delay(100); // delay to make the ankle move before the knee so the foot doesnt touch the floor
   UpdateServo(knee, 35);
 }
 
@@ -221,24 +224,21 @@ void touching1Right(int knee, int ankle)
 }
 void touching2Right(int knee, int ankle)
 {
-  UpdateServo(knee, 70);
+  UpdateServo(knee, 80);
   UpdateServo(ankle, 110);
 }
 void nextStepRight(int knee, int ankle)
 {
   UpdateServo(ankle, 55);
-  delay(75);
+  delay(100); // delay to make the ankle move before the knee so the foot doesnt touch the floor
   UpdateServo(knee, 145);
 }
-void stand(int knee, int ankle)
-{
-  UpdateServo(knee, 90);
-  UpdateServo(ankle, 90);
-}
+
+//Reset hips position
 void resetHips(void)
 {
-  UpdateServo(frontLeftHip, 100); 
   UpdateServo(frontRightHip, 80); 
   UpdateServo(backLeftHip, 70); 
-  UpdateServo(backRightHip, 100); 
+  UpdateServo(frontLeftHip, 100); 
+  UpdateServo(backRightHip, 100);
 }
